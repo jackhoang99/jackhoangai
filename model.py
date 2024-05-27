@@ -214,11 +214,14 @@ if st.session_state.logged_in:
             my_bar.progress(65)
             response = qa_bot.invoke({"query": user_input})
             my_bar.progress(100)
-            st.write(response["result"])
 
             # Generate audio response
             audio_response = synthesize_audio(response["result"])
+            st.write(response["result"])
             st.audio(audio_response, format="audio/wav")
+            progress_caption.empty()
+            my_bar.empty()
+
             # Attempt to play the audio response
             try:
                 play(audio_response)
@@ -227,8 +230,6 @@ if st.session_state.logged_in:
         except Exception as e:
             st.error(f"An error occurred: {str(e)}")
         finally:
-            progress_caption.empty()
-            my_bar.empty()
             st.balloons()
 
 

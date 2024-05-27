@@ -6,9 +6,15 @@ from langchain_community.llms import Replicate
 from langchain_community.vectorstores import FAISS
 from langchain_core.prompts import PromptTemplate
 from langchain.chains import RetrievalQA
+from elevenlabs.client import ElevenLabs
+from elevenlabs import play
 
 # Setting up the environment variable
 REPLICATE_API_TOKEN = st.secrets["REPLICATE_API_TOKEN"]
+ELEVEN_LABS_API_KEY = st.secrets["ELEVEN_LABS_API_KEY"]
+
+# Initialize Eleven Labs client
+client = ElevenLabs(api_key=ELEVEN_LABS_API_KEY)
 
 # Define constants
 DB_FAISS_PATH = "vectorstore/db_faiss"
@@ -50,6 +56,14 @@ def load_qa_bot():
         return_source_documents=True,
         chain_type_kwargs={"prompt": prompt},
     )
+
+
+def synthesize_audio(text):
+    audio_generator = client.generate(
+        text=text, voice="Jack", model="eleven_multilingual_v2"
+    )
+    audio_bytes = b"".join(list(audio_generator))
+    return audio_bytes
 
 
 # App layout
@@ -180,11 +194,11 @@ if not st.session_state.logged_in:
 # Main content
 if st.session_state.logged_in:
     st.markdown(
-        '<h1 class="title">Ask Me About Tra Hoang</h1>',
+        '<h1 class="title">🌿Ask Me About Tra Hoang🌿</h1>',
         unsafe_allow_html=True,
     )
     st.markdown(
-        '<h2 class="subheader">Learn more about Tra Hoang and her therapy practice</h2>',
+        '<h2 class="subheader">Learn more about Tra Hoang and her therapy practice!</h2>',
         unsafe_allow_html=True,
     )
     user_input = st.text_area("Ask anything about Tra Hoang:")
@@ -201,12 +215,22 @@ if st.session_state.logged_in:
             response = qa_bot.invoke({"query": user_input})
             my_bar.progress(100)
             st.write(response["result"])
+
+            # Generate audio response
+            audio_response = synthesize_audio(response["result"])
+            st.audio(audio_response, format="audio/wav")
+            # Attempt to play the audio response
+            try:
+                play(audio_response)
+            except Exception:
+                pass  # Ignore errors from play
         except Exception as e:
             st.error(f"An error occurred: {str(e)}")
         finally:
             progress_caption.empty()
             my_bar.empty()
             st.balloons()
+
 
 # Footer
 st.markdown(

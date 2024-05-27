@@ -194,7 +194,7 @@ if not st.session_state.logged_in:
 # Main content
 if st.session_state.logged_in:
     st.markdown(
-        '<h1 class="title">🌿Ask Me About Tra Hoang🌿</h1>',
+        '<h1 class="title">🌿Ask Me About Tra🌿</h1>',
         unsafe_allow_html=True,
     )
     st.markdown(

@@ -18,7 +18,7 @@ client = ElevenLabs(api_key=ELEVEN_LABS_API_KEY)
 
 # Define constants
 DB_FAISS_PATH = "vectorstore/db_faiss"
-custom_prompt_template = """Use the following pieces of information to answer the user's question about Tra Hoang and her practice.
+custom_prompt_template = """Use the following pieces of information to answer the user's question about Jack Hoang and his work.
 Do not acknowledge my request with "sure" or in any other way besides going straight to the answer. 
 Don't include 'based on information provided' in your final answer.
 Context: {context}
@@ -68,8 +68,8 @@ def synthesize_audio(text):
 
 # App layout
 st.set_page_config(
-    page_title="Ask Me About Tra Hoang's Therapist Practice",
-    page_icon="🌿",
+    page_title="Jack Hoang - Software Engineer",
+    page_icon="💻",
     layout="wide",
 )
 st.markdown(
@@ -84,12 +84,8 @@ st.markdown(
         background-color: #f0f4f7;
         color: #333;
     }
-    .sidebar .sidebar-content {
-        background-image: linear-gradient(#8bc34a, #558b2f);
-        color: white;
-    }
     .stButton button {
-        background-color: #8bc34a;
+        background-color: #2196f3;
         color: white;
         border-radius: 8px;
         border: none;
@@ -99,7 +95,7 @@ st.markdown(
         transition: background-color 0.3s, transform 0.3s;
     }
     .stButton button:hover {
-        background-color: #558b2f;
+        background-color: #1976d2;
         transform: scale(1.05);
     }
     .stTextInput div, .stTextArea div, .stForm div label {
@@ -107,7 +103,7 @@ st.markdown(
     }
     .stTextArea textarea {
         background-color: #ffffff;
-        border: 1px solid #8bc34a;
+        border: 1px solid #2196f3;
         border-radius: 4px;
         color: #333;
         font-size: 1rem;
@@ -116,41 +112,34 @@ st.markdown(
         transition: border-color 0.3s, box-shadow 0.3s;
     }
     .stTextArea textarea:focus {
-        border-color: #558b2f;
-        box-shadow: 0 0 5px rgba(85, 139, 47, 0.5);
+        border-color: #1976d2;
+        box-shadow: 0 0 5px rgba(33, 150, 243, 0.5);
     }
     .stTextArea textarea::placeholder {
         color: #999;
     }
     .stProgress .st-bw {
-        background-color: #8bc34a;
+        background-color: #2196f3;
         height: 20px;
         border-radius: 10px;
         animation: progressAnim 2s ease-in-out infinite;
     }
     .stCaption {
-        color: #8bc34a;
+        color: #2196f3;
         font-weight: bold;
     }
     .title {
-        font-size: 2rem;
+        font-size: 2.5rem;
         text-align: center;
         margin-bottom: 1rem;
-        color: #333;
+        color: #2196f3;
         font-weight: bold;
     }
     .subheader {
         font-size: 1.25rem;
         text-align: center;
-        margin-bottom: 1rem;
+        margin-bottom: 2rem;
         color: #666;
-    }
-    .login-title {
-        font-size: 2rem;
-        text-align: center;
-        margin-bottom: 1rem;
-        color: #333;
-        font-weight: bold;
     }
     @keyframes progressAnim {
         0% { width: 0; }
@@ -160,7 +149,7 @@ st.markdown(
         from { opacity: 0; }
         to { opacity: 1; }
     }
-    .login-title, .title, .subheader, .stButton button {
+    .title, .subheader, .stButton button {
         animation: fadeIn 1s ease-in-out;
     }
     </style>
@@ -168,75 +157,55 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# Header and Login
-if "logged_in" not in st.session_state:
-    st.session_state.logged_in = False
-
-placeholder = st.empty()
-actual_email = "therapist"
-actual_password = "trahoang"
-
-if not st.session_state.logged_in:
-    with placeholder.form("login"):
-        st.markdown(
-            '<h2 class="login-title">Welcome to Tra Hoang\'s Therapist Bot</h2>',
-            unsafe_allow_html=True,
-        )
-        email = st.text_input("Username")
-        password = st.text_input("Password", type="password")
-        submit = st.form_submit_button("Login")
-        if submit and (email != actual_email or password != actual_password):
-            st.error("Incorrect username or password")
-        if submit and (email == actual_email and password == actual_password):
-            st.session_state.logged_in = True
-            placeholder.empty()
-
 # Main content
-if st.session_state.logged_in:
-    st.markdown(
-        '<h1 class="title">🌿Ask Me About Tra🌿</h1>',
-        unsafe_allow_html=True,
-    )
-    st.markdown(
-        '<h2 class="subheader">Learn more about Tra Hoang and her therapy practice!</h2>',
-        unsafe_allow_html=True,
-    )
-    user_input = st.text_area("Ask anything about Tra Hoang:")
+st.markdown(
+    '<h1 class="title">Jack Hoang AI Assistant 💻</h1>',
+    unsafe_allow_html=True,
+)
+st.markdown(
+    '<h2 class="subheader">Software Engineer | Full Stack Developer</h2>',
+    unsafe_allow_html=True,
+)
 
-    if st.button("Submit"):
-        progress_text = "Finding the best answer for you. Please wait..."
-        progress_caption = st.caption(progress_text)
-        my_bar = st.progress(0)
+user_input = st.text_area(
+    "Ask anything about Jack Hoang:",
+    placeholder="e.g. How did you get into software development?",
+    height=100,
+)
 
+if st.button("Submit"):
+    progress_text = "Finding the best answer for you. Please wait..."
+    progress_caption = st.caption(progress_text)
+    my_bar = st.progress(0)
+
+    try:
+        my_bar.progress(10)
+        qa_bot = load_qa_bot()
+        my_bar.progress(65)
+        response = qa_bot.invoke({"query": user_input})
+        my_bar.progress(100)
+
+        # Generate audio response
+        audio_response = synthesize_audio(response["result"])
+        st.write(response["result"])
+        st.audio(audio_response, format="audio/wav")
+        progress_caption.empty()
+        my_bar.empty()
+
+        # Attempt to play the audio response
         try:
-            my_bar.progress(10)
-            qa_bot = load_qa_bot()
-            my_bar.progress(65)
-            response = qa_bot.invoke({"query": user_input})
-            my_bar.progress(100)
-
-            # Generate audio response
-            audio_response = synthesize_audio(response["result"])
-            st.write(response["result"])
-            st.audio(audio_response, format="audio/wav")
-            progress_caption.empty()
-            my_bar.empty()
-
-            # Attempt to play the audio response
-            try:
-                play(audio_response)
-            except Exception:
-                pass  # Ignore errors from play
-        except Exception as e:
-            st.error(f"An error occurred: {str(e)}")
-        finally:
-            st.balloons()
-
+            play(audio_response)
+        except Exception:
+            pass  # Ignore errors from play
+    except Exception as e:
+        st.error(f"An error occurred: {str(e)}")
+    finally:
+        st.balloons()
 
 # Footer
 st.markdown(
     """
-    <hr style="border-top: 2px solid #8bc34a;">
+    <hr style="border-top: 2px solid #2196f3;">
     <div style="text-align:center;">
         <p>Powered by Jack Hoang</p>
     </div>

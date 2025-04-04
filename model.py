@@ -108,6 +108,15 @@ st.markdown(
     .stTextInput div, .stTextArea div, .stForm div label {
         color: #333;
     }
+    /* Make the label more visible */
+    .stTextArea label {
+        color: #ffffff !important;
+        font-weight: 500 !important;
+        font-size: 1rem !important;
+        margin-bottom: 0.3rem !important;
+        display: block !important;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.2) !important;
+    }
     .stTextArea textarea {
         background-color: #ffffff;
         border: 1px solid #2196f3;
@@ -116,7 +125,7 @@ st.markdown(
         font-size: 0.9rem;
         padding: 0.4rem;
         margin-top: 0.3rem;
-        min-height: 60px !important;
+        min-height: 70px !important;
         transition: border-color 0.3s, box-shadow 0.3s;
     }
     .stTextArea textarea:focus {

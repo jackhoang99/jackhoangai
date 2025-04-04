@@ -71,6 +71,7 @@ st.set_page_config(
     page_title="Jack Hoang - Software Engineer",
     page_icon="💻",
     layout="wide",
+    initial_sidebar_state="collapsed",
 )
 st.markdown(
     """
@@ -83,20 +84,26 @@ st.markdown(
     .main {
         background-color: #f0f4f7;
         color: #333;
+        padding: 0rem !important;
+    }
+    .block-container {
+        padding-top: 1rem !important;
+        padding-bottom: 0rem !important;
+        max-width: 100% !important;
     }
     .stButton button {
         background-color: #2196f3;
         color: white;
-        border-radius: 8px;
+        border-radius: 6px;
         border: none;
-        padding: 0.5rem 1rem;
-        font-size: 1rem;
-        margin-top: 1rem;
+        padding: 0.3rem 0.8rem;
+        font-size: 0.9rem;
+        margin-top: 0.5rem;
         transition: background-color 0.3s, transform 0.3s;
     }
     .stButton button:hover {
         background-color: #1976d2;
-        transform: scale(1.05);
+        transform: scale(1.02);
     }
     .stTextInput div, .stTextArea div, .stForm div label {
         color: #333;
@@ -106,51 +113,56 @@ st.markdown(
         border: 1px solid #2196f3;
         border-radius: 4px;
         color: #333;
-        font-size: 1rem;
-        padding: 0.5rem;
-        margin-top: 0.5rem;
+        font-size: 0.9rem;
+        padding: 0.4rem;
+        margin-top: 0.3rem;
+        min-height: 60px !important;
         transition: border-color 0.3s, box-shadow 0.3s;
     }
     .stTextArea textarea:focus {
         border-color: #1976d2;
-        box-shadow: 0 0 5px rgba(33, 150, 243, 0.5);
+        box-shadow: 0 0 5px rgba(33, 150, 243, 0.3);
     }
     .stTextArea textarea::placeholder {
         color: #999;
+        font-size: 0.85rem;
     }
     .stProgress .st-bw {
         background-color: #2196f3;
-        height: 20px;
-        border-radius: 10px;
-        animation: progressAnim 2s ease-in-out infinite;
+        height: 10px;
+        border-radius: 5px;
     }
     .stCaption {
         color: #2196f3;
-        font-weight: bold;
+        font-weight: 500;
+        font-size: 0.8rem;
     }
     .title {
-        font-size: 2.5rem;
+        font-size: 1.5rem;
         text-align: center;
-        margin-bottom: 1rem;
+        margin-bottom: 0.3rem;
         color: #2196f3;
         font-weight: bold;
     }
     .subheader {
-        font-size: 1.25rem;
+        font-size: 0.9rem;
         text-align: center;
-        margin-bottom: 2rem;
+        margin-bottom: 0.8rem;
         color: #666;
     }
-    @keyframes progressAnim {
-        0% { width: 0; }
-        100% { width: 100%; }
+    .footer {
+        margin-top: 0.5rem;
+        border-top: 1px solid #2196f3;
+        padding-top: 0.3rem;
+        font-size: 0.8rem;
+        color: #666;
     }
-    @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
+    audio {
+        width: 100%;
+        height: 30px;
     }
-    .title, .subheader, .stButton button {
-        animation: fadeIn 1s ease-in-out;
+    .element-container {
+        margin-bottom: 0.5rem;
     }
     </style>
     """,
@@ -158,10 +170,7 @@ st.markdown(
 )
 
 # Main content
-st.markdown(
-    '<h1 class="title">Jack Hoang AI Assistant 💻</h1>',
-    unsafe_allow_html=True,
-)
+st.markdown('<h1 class="title">Jack Hoang AI Assistant 💻</h1>', unsafe_allow_html=True)
 st.markdown(
     '<h2 class="subheader">Software Engineer | Full Stack Developer</h2>',
     unsafe_allow_html=True,
@@ -170,11 +179,11 @@ st.markdown(
 user_input = st.text_area(
     "Ask anything about Jack Hoang:",
     placeholder="e.g. How did you get into software development?",
-    height=100,
+    height=60,
 )
 
 if st.button("Submit"):
-    progress_text = "Finding the best answer for you. Please wait..."
+    progress_text = "Finding answer..."
     progress_caption = st.caption(progress_text)
     my_bar = st.progress(0)
 
@@ -199,14 +208,11 @@ if st.button("Submit"):
             pass  # Ignore errors from play
     except Exception as e:
         st.error(f"An error occurred: {str(e)}")
-    finally:
-        st.balloons()
 
 # Footer
 st.markdown(
     """
-    <hr style="border-top: 2px solid #2196f3;">
-    <div style="text-align:center;">
+    <div class="footer" style="text-align:center;">
         <p>Powered by Jack Hoang</p>
     </div>
     """,

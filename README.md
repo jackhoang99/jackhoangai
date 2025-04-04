@@ -1,2 +1,1 @@
-# jack-s-ai
-# jack-s-ai
+jack's ai for website

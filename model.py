@@ -179,7 +179,7 @@ st.markdown(
 user_input = st.text_area(
     "Ask anything about Jack Hoang:",
     placeholder="e.g. How did you get into software development?",
-    height=60,
+    height=70,
 )
 
 if st.button("Submit"):
